@@ -1,3 +1,4 @@
+Hello,
 in my application manifest, i usually have multiple values files there that configure the underlying chart
 
 

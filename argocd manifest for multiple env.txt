@@ -1,0 +1,33 @@
+in my application manifest, i usually have multiple values files there that configure the underlying chart
+
+
+
+
+cabrinha  1 hour ago
+{{ if .Values.datadog.enabled }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ .Values.environment}}-datadog-{{ .Values.region }}
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: base
+  destination:
+    namespace: datadog
+    server: {{ .Values.spec.destination.server }}
+  source:
+    chart: {{ .Values.datadog.chart }}
+    repoURL: {{ .Values.datadog.repoURL }}
+    targetRevision: {{ .Values.datadog.targetRevision }}
+    helm:
+      valueFiles:
+      - values.yaml
+      - "values/{{ .Values.region }}/{{ .Values.environment }}.yaml"
+  # Sync policy
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+{{- end }}
